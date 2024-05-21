@@ -17,10 +17,10 @@ impl Resta {
 }
 
 impl operation::Operation for Resta {
-    fn display_name(&self) -> String {
+    fn display_name(&self) -> &str {
         self.base.display_name()
     }
-    fn parameter_names(&self) -> Vec<String> {
+    fn parameter_names(&self) -> &Vec<String> {
         self.base.parameter_names()
     }
     fn progress(&self) -> f32 {

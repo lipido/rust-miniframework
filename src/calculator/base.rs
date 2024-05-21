@@ -1,10 +1,12 @@
+use std::cell::RefCell;
+
 use miniframework::observer;
 use miniframework::operation;
 pub struct BasicOperation {
     name: String,
     parameter_names: Vec<String>,
     observer_manager: observer::ObserversManager,
-    progress: f32,
+    progress: RefCell<f32>,
 }
 
 impl BasicOperation {
@@ -13,24 +15,25 @@ impl BasicOperation {
             name: name.to_string(),
             parameter_names: parameter_names.iter().map(|s| s.to_string()).collect(),
             observer_manager: observer::ObserversManager::new(),
-            progress: 0.0,
+            progress: RefCell::new(0.0),
         }
     }
     pub fn notify_observers(&self, originator: &dyn observer::Observable) {
         self.observer_manager.notify_observers(originator)
     }
-    pub fn update_progress(&mut self, new_progress: f32) {
-        self.progress = new_progress;
+    pub fn update_progress(&self, new_progress: f32) {
+        let mut progress = self.progress.borrow_mut();
+        *progress = new_progress
     }
 }
 
 impl operation::Operation for BasicOperation {
-    fn display_name(&self) -> String {
-        self.name.clone()
+    fn display_name(&self) -> &str {
+        &self.name
     }
 
-    fn parameter_names(&self) -> Vec<String> {
-        self.parameter_names.clone()
+    fn parameter_names(&self) -> &Vec<String> {
+        &self.parameter_names
     }
 
     fn run(&self, _parameter_values: Vec<String>) -> String {
@@ -38,7 +41,7 @@ impl operation::Operation for BasicOperation {
     }
 
     fn progress(&self) -> f32 {
-        self.progress
+        self.progress.borrow().clone()
     }
 }
 
