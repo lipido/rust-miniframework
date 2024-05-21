@@ -9,12 +9,11 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn from_operations() -> Self {
+    pub fn new() -> Self {
         
         let app = Application { operations: Vec::new() };
         app
     }
-
 
     // Helper method to add a concrete item without forcing clients to use Rc and RefCell
     pub fn add_operation<T: operation::Operation + 'static>(&mut self, item: T) {

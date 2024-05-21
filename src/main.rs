@@ -9,9 +9,11 @@ fn main() {
     //     Box::new(suma::Suma::new()),
     //     Box::new(protected::ProtectedOperation::new(protected::ProtectedOperation::new(resta::Resta::new()))),
     // ]);
-    let mut app = application::Application::from_operations();
+    let mut app = application::Application::new();
+    
     app.add_operation(suma::Suma::new());
     app.add_operation(resta::Resta::new());
     app.add_operation(protected::ProtectedOperation::new(suma::Suma::new()));
+
     app.start();
 }
