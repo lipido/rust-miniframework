@@ -27,11 +27,8 @@ impl Application {
     ) {
         let operation = Rc::new(RefCell::new(item));
 
-        let operation_ref_for_observer = Rc::clone(&operation);
-        let observer = Box::new(OperationObserver {
-            operation: operation_ref_for_observer,
-        });
-        operation.borrow_mut().add_observer(observer);
+        OperationObserver::observe(&operation);
+
         self.operations.push(operation);
     }
     pub fn start(&mut self) {
@@ -97,6 +94,17 @@ impl Application {
 
 struct OperationObserver {
     operation: Rc<RefCell<dyn operation::Operation>>,
+}
+impl OperationObserver {
+    fn observe<T: operation::Operation + observer::Observable + 'static>(
+        operation: &Rc<RefCell<T>>,
+    ) {
+        let second_ref = Rc::clone(&operation);
+        let observer = Box::new(OperationObserver {
+            operation: second_ref,
+        });
+        operation.borrow_mut().add_observer(observer);
+    }
 }
 impl observer::Observer for OperationObserver {
     fn update(&self, _originator: &dyn observer::Observable) {
