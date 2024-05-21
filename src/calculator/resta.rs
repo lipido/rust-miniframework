@@ -1,4 +1,4 @@
-use miniframework::{operation, observer};
+use miniframework::operation;
 
 use super::base::BasicOperation;
 
@@ -49,9 +49,3 @@ impl operation::Operation for Resta {
     
 }
 
-impl observer::Observable for Resta {
-    fn add_observer(&mut self, observer: Box<dyn observer::Observer>) {
-        self.base.add_observer(observer)
-    }
-    
-}

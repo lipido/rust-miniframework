@@ -7,12 +7,7 @@ pub trait Observer {
 
 pub trait Observable  {
     fn add_observer(&mut self, _observer: Box<dyn Observer>) {
-
     }
-
-    // fn get_value(&self) -> &dyn Any {
-    //     panic!("ey");
-    // }
 }
 
 

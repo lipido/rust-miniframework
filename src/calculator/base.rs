@@ -49,7 +49,4 @@ impl observer::Observable for BasicOperation {
     fn add_observer(&mut self, observer: Box<dyn observer::Observer>) {
         self.observer_manager.add_observer(observer)
     }
-    // fn get_value(&self) -> &dyn Any {
-    //     &self.progress
-    // }
 }

@@ -10,24 +10,31 @@ pub struct Application {
 
 impl Application {
     pub fn new() -> Self {
-        
-        let app = Application { operations: Vec::new() };
+        let app = Application {
+            operations: Vec::new(),
+        };
         app
     }
 
     // Helper method to add a concrete item without forcing clients to use Rc and RefCell
     pub fn add_operation<T: operation::Operation + 'static>(&mut self, item: T) {
         let operation: Rc<RefCell<dyn operation::Operation>> = Rc::new(RefCell::new(item));
+        self.operations.push(operation);
+    }
+    pub fn add_observable_operation<T: operation::Operation + observer::Observable + 'static>(
+        &mut self,
+        item: T,
+    ) {
+        let operation = Rc::new(RefCell::new(item));
 
+        let operation_ref_for_observer = Rc::clone(&operation);
         let observer = Box::new(OperationObserver {
-            operation: Rc::clone(&operation),
+            operation: operation_ref_for_observer,
         });
-
         operation.borrow_mut().add_observer(observer);
         self.operations.push(operation);
     }
     pub fn start(&mut self) {
-        
         loop {
             self.menu();
             let option = self.select_option();
@@ -73,30 +80,30 @@ impl Application {
         let operation = self.operations[operation_index - 1].as_ref();
 
         let mut parameter_values: Vec<String> = Vec::new();
-    
+
         for parameter_name in operation.borrow().parameter_names() {
             println!("{}: ", parameter_name);
-    
+
             let mut input = String::new();
             io::stdin()
-                    .read_line(&mut input)
-                    .expect("Failed to read line");
+                .read_line(&mut input)
+                .expect("Failed to read line");
             parameter_values.push(input.trim().to_string());
-            
         }
-    
+
         parameter_values
-    
     }
 }
 
 struct OperationObserver {
-    operation: Rc<RefCell<dyn operation::Operation>>
+    operation: Rc<RefCell<dyn operation::Operation>>,
 }
 impl observer::Observer for OperationObserver {
     fn update(&self, _originator: &dyn observer::Observable) {
-        
-        println!("Progress of {}: {}", self.operation.borrow().display_name(), self.operation.borrow().progress());
-        
+        println!(
+            "Progress of {}: {}",
+            self.operation.borrow().display_name(),
+            self.operation.borrow().progress()
+        );
     }
 }

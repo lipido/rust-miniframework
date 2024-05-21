@@ -18,7 +18,7 @@ impl<O: operation::Operation> ProtectedOperation<O> {
         res
     }
     fn is_full_version() -> bool {
-        false
+        true
     }
 }
 impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
@@ -44,7 +44,7 @@ impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
     
     
 }
-impl <O: operation::Operation> observer::Observable for ProtectedOperation<O>  {
+impl <O: operation::Operation + observer::Observable> observer::Observable for ProtectedOperation<O>  {
     fn add_observer(&mut self, observer: Box<dyn observer::Observer>) {
         self.base.add_observer(observer);
     }
