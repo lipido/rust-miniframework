@@ -22,21 +22,26 @@ impl<O: operation::Operation> ProtectedOperation<O> {
     }
 }
 impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
-    fn display_name(&self) -> &str {
-        &self.name
+    fn display_name(&self) -> String {
+        self.name.clone()
     }
 
-    fn parameter_names(&self) -> &Vec<String> {
+    fn parameter_names(&self) -> Vec<String> {
         self.base.parameter_names()
     }
-
-    fn run(&mut self, parameter_values: Vec<String>) -> String {
+    
+    fn progress(&self) -> f32 {
+        self.base.progress()
+    }
+    
+    fn run(&self, parameter_values: Vec<String>) -> String {
         if ProtectedOperation::<O>::is_full_version() {
             self.base.run(parameter_values)
         } else {
             return String::from("Not in full version")
         }
     }
+    
     
 }
 impl <O: operation::Operation> observer::Observable for ProtectedOperation<O>  {

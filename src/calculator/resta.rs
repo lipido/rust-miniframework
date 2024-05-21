@@ -17,14 +17,17 @@ impl Resta {
 }
 
 impl operation::Operation for Resta {
-    fn display_name(&self) -> &str {
+    fn display_name(&self) -> String {
         self.base.display_name()
     }
-    fn parameter_names(&self) -> &Vec<String> {
+    fn parameter_names(&self) -> Vec<String> {
         self.base.parameter_names()
     }
+    fn progress(&self) -> f32 {
+        self.base.progress()
+    }
 
-    fn run(&mut self, parameter_values: Vec<String>) -> String {
+    fn run(&self, parameter_values: Vec<String>) -> String {
         if parameter_values.len() != 2 {
             panic!("This operation requires exactly two integers")
         }
@@ -42,7 +45,6 @@ impl operation::Operation for Resta {
 
         result
     }
-    
 
     
 }

@@ -1,4 +1,3 @@
-use std::any::Any;
 
 // Observer design pattern
 pub trait Observer {
@@ -11,9 +10,9 @@ pub trait Observable  {
 
     }
 
-    fn get_value(&self) -> &dyn Any {
-        panic!("ey");
-    }
+    // fn get_value(&self) -> &dyn Any {
+    //     panic!("ey");
+    // }
 }
 
 
