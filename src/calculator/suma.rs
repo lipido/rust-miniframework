@@ -24,9 +24,6 @@ impl operation::Operation for Suma {
         self.base.parameter_names()
     }
 
-    fn progress(&self) -> f32 {
-        self.base.progress()
-    }
 
     fn run(&self, parameter_values: Vec<String>) -> String {
         if parameter_values.len() != 2 {
@@ -35,8 +32,7 @@ impl operation::Operation for Suma {
 
         let mut result = String::new();
 
-        self.base.update_progress(0.5);
-        self.base.notify_observers(self);
+        self.base.notify_observers(&0.5);
 
         if let (Ok(sumando_a), Ok(sumando_b)) = (
             parameter_values[0].parse::<i32>(),
@@ -53,8 +49,8 @@ impl operation::Operation for Suma {
 
 }
 
-impl observer::Observable for Suma {
-    fn add_observer(&mut self, observer: Box<dyn observer::Observer>) {
+impl observer::Observable<f32> for Suma {
+    fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>>) {
         self.base.add_observer(observer)
     }
     // fn get_value(&self) -> Any {

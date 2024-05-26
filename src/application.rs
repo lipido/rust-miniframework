@@ -21,7 +21,7 @@ impl Application {
         let operation: Rc<RefCell<dyn operation::Operation>> = Rc::new(RefCell::new(item));
         self.operations.push(operation);
     }
-    pub fn add_observable_operation<T: operation::Operation + observer::Observable + 'static>(
+    pub fn add_observable_operation<T: operation::Operation + observer::Observable<f32> + 'static>(
         &mut self,
         item: T,
     ) {
@@ -93,25 +93,20 @@ impl Application {
 }
 
 struct OperationObserver {
-    operation: Rc<RefCell<dyn operation::Operation>>,
 }
 impl OperationObserver {
-    fn observe<T: operation::Operation + observer::Observable + 'static>(
+    fn observe<T: operation::Operation + observer::Observable<f32> + 'static>(
         operation: &Rc<RefCell<T>>,
     ) {
-        let second_ref = Rc::clone(&operation);
         let observer = Box::new(OperationObserver {
-            operation: second_ref,
         });
         operation.borrow_mut().add_observer(observer);
     }
 }
-impl observer::Observer for OperationObserver {
-    fn update(&self, _originator: &dyn observer::Observable) {
+impl observer::Observer<f32> for OperationObserver {
+    fn update(&self, data: &f32) {
         println!(
-            "Progress of {}: {}",
-            self.operation.borrow().display_name(),
-            self.operation.borrow().progress()
+            "Progress {}", data
         );
     }
 }

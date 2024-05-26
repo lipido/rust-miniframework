@@ -18,7 +18,7 @@ impl<O: operation::Operation> ProtectedOperation<O> {
         res
     }
     fn is_full_version() -> bool {
-        true
+        false
     }
 }
 impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
@@ -30,9 +30,6 @@ impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
         self.base.parameter_names()
     }
     
-    fn progress(&self) -> f32 {
-        self.base.progress()
-    }
 
     fn run(&self, parameter_values: Vec<String>) -> String {
         if ProtectedOperation::<O>::is_full_version() {
@@ -44,8 +41,9 @@ impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
     
     
 }
-impl <O: operation::Operation + observer::Observable> observer::Observable for ProtectedOperation<O>  {
-    fn add_observer(&mut self, observer: Box<dyn observer::Observer>) {
+impl <O: operation::Operation + observer::Observable<f32>> observer::Observable<f32> for ProtectedOperation<O>  {
+    fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>
+        >) {
         self.base.add_observer(observer);
     }
 }

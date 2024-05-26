@@ -23,9 +23,6 @@ impl operation::Operation for Resta {
     fn parameter_names(&self) -> &Vec<String> {
         self.base.parameter_names()
     }
-    fn progress(&self) -> f32 {
-        self.base.progress()
-    }
 
     fn run(&self, parameter_values: Vec<String>) -> String {
         if parameter_values.len() != 2 {
