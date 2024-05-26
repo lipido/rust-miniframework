@@ -1,14 +1,14 @@
-use std::{cell::RefCell, io, rc::Rc};
+use std::io;
 
-use crate::observer;
+use crate::{observer, operation::ObservableOperation};
 
 use super::operation;
 
-pub struct Application {
-    operations: Vec<Rc<RefCell<dyn operation::Operation>>>,
+pub struct Application<'a> {
+    operations: Vec<Box<dyn operation::Operation + 'a>>,
 }
 
-impl Application {
+impl<'a> Application<'a> {
     pub fn new() -> Self {
         let app = Application {
             operations: Vec::new(),
@@ -16,18 +16,19 @@ impl Application {
         app
     }
 
-    // Helper method to add a concrete item without forcing clients to use Rc and RefCell
-    pub fn add_operation<T: operation::Operation + 'static>(&mut self, item: T) {
-        let operation: Rc<RefCell<dyn operation::Operation>> = Rc::new(RefCell::new(item));
+    pub fn add_operation<T: operation::Operation + 'a>(&mut self, item: T) {
+        let operation = Box::new(item);
         self.operations.push(operation);
     }
-    pub fn add_observable_operation<T: operation::Operation + observer::Observable<f32> + 'static>(
+    pub fn add_observable_operation<
+        T: operation::ObservableOperation + 'static,
+    >(
         &mut self,
         item: T,
     ) {
-        let operation = Rc::new(RefCell::new(item));
+        let mut operation = Box::new(item);
 
-        OperationObserver::observe(&operation);
+        OperationObserver::observe(&mut operation);
 
         self.operations.push(operation);
     }
@@ -36,7 +37,7 @@ impl Application {
             self.menu();
             let option = self.select_option();
             let parameter_values = self.get_parameter_values(option);
-            let result = self.operations[option - 1].borrow().run(parameter_values);
+            let result = self.operations[option - 1].run(parameter_values);
 
             println!("{}", result);
         }
@@ -69,7 +70,7 @@ impl Application {
     fn menu(&self) {
         println!("Menu\n----");
         for (i, ele) in self.operations.iter().enumerate() {
-            println!("{}. {}", i + 1, ele.borrow().display_name());
+            println!("{}. {}", i + 1, ele.display_name());
         }
     }
 
@@ -78,7 +79,7 @@ impl Application {
 
         let mut parameter_values: Vec<String> = Vec::new();
 
-        for parameter_name in operation.borrow().parameter_names() {
+        for parameter_name in operation.parameter_names() {
             println!("{}: ", parameter_name);
 
             let mut input = String::new();
@@ -92,21 +93,17 @@ impl Application {
     }
 }
 
-struct OperationObserver {
-}
+struct OperationObserver {}
 impl OperationObserver {
-    fn observe<T: operation::Operation + observer::Observable<f32> + 'static>(
-        operation: &Rc<RefCell<T>>,
+    fn observe<T: ObservableOperation>(
+        operation: &mut Box<T>,
     ) {
-        let observer = Box::new(OperationObserver {
-        });
-        operation.borrow_mut().add_observer(observer);
+        let observer = Box::new(OperationObserver {});
+        operation.add_observer(observer);
     }
 }
 impl observer::Observer<f32> for OperationObserver {
     fn update(&self, data: &f32) {
-        println!(
-            "Progress {}", data
-        );
+        println!("Progress {}", data);
     }
 }

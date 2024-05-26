@@ -1,6 +1,7 @@
 // Proxy design pattern with generic and trait bounds
 use miniframework::operation;
 use miniframework::observer;
+use miniframework::operation::ObservableOperation;
 pub struct ProtectedOperation<O: operation::Operation> {
     base: O,
     name: String
@@ -41,9 +42,11 @@ impl <O: operation::Operation> operation::Operation for ProtectedOperation<O> {
     
     
 }
-impl <O: operation::Operation + observer::Observable<f32>> observer::Observable<f32> for ProtectedOperation<O>  {
+impl <O: ObservableOperation> observer::Observable<f32> for ProtectedOperation<O>  {
     fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>
         >) {
         self.base.add_observer(observer);
     }
 }
+
+impl <O: ObservableOperation> ObservableOperation for ProtectedOperation<O> {}

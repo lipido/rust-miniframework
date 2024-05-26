@@ -1,6 +1,6 @@
 
 use super::base;
-use miniframework::{observer, operation};
+use miniframework::{observer, operation::{self, ObservableOperation}};
 
 pub struct Suma {
     base: base::BasicOperation,
@@ -45,6 +45,8 @@ impl operation::Operation for Suma {
 
         result
     }
+
+    
     
 
 }
@@ -53,8 +55,7 @@ impl observer::Observable<f32> for Suma {
     fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>>) {
         self.base.add_observer(observer)
     }
-    // fn get_value(&self) -> Any {
-    //     self.base.borrow().get_value().clone()
-    // }
-
 }
+
+impl ObservableOperation for Suma {}
+
