@@ -1,7 +1,12 @@
 use std::io;
 
-use crate::framework::{observer, operation::{self, ObservableOperation}};
+use crate::framework::{observer::{self, Observer}, operation::{self, ObservableOperation}};
 
+impl<D> Observer<D> for Box<dyn Observer<D>> {
+    fn update(&self, data: &D) {
+        (**self).update(data);
+    }
+}
 
 pub struct Application<'a> {
     operations: Vec<Box<dyn operation::Operation +'a>>,

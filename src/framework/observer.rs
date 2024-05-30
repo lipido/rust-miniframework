@@ -13,11 +13,7 @@ pub trait Observable<D, O: Observer<D>>  {
     }
 }
 
-impl<D> Observer<D> for Box<dyn Observer<D>> {
-    fn update(&self, data: &D) {
-        (**self).update(data);
-    }
-}
+
 
 pub struct ObserversManager<D, O: Observer<D>> {
     observers: Vec<O>,
