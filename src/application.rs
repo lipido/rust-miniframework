@@ -5,7 +5,7 @@ use crate::{observer, operation::ObservableOperation};
 use super::operation;
 
 pub struct Application<'a> {
-    operations: Vec<Box<dyn operation::Operation + 'a>>,
+    operations: Vec<Box<dyn operation::Operation +'a>>,
 }
 
 impl<'a> Application<'a> {
@@ -20,8 +20,9 @@ impl<'a> Application<'a> {
         let operation = Box::new(item);
         self.operations.push(operation);
     }
+
     pub fn add_observable_operation<
-        T: operation::ObservableOperation + 'static,
+        T: operation::ObservableOperation +'a,
     >(
         &mut self,
         item: T,
