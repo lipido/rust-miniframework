@@ -3,7 +3,7 @@ use super::base;
 use miniframework::{observer, operation::{self, ObservableOperation}};
 
 pub struct Suma {
-    base: base::BasicOperation,
+    base: base::BasicOperation<Box<dyn observer::Observer<f32>>>,
     
 }
 
@@ -57,5 +57,5 @@ impl observer::Observable<f32, Box<dyn observer::Observer<f32>>> for Suma {
     }
 }
 
-impl ObservableOperation for Suma {}
+impl ObservableOperation<Box<dyn observer::Observer<f32>>> for Suma {}
 

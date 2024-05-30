@@ -1,9 +1,9 @@
-use miniframework::operation;
+use miniframework::{observer, operation};
 
 use super::base::BasicOperation;
 
 pub struct Resta {
-    base: BasicOperation
+    base: BasicOperation<Box<dyn observer::Observer<f32>>>
 }
 
 impl Resta {

@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 
 // Observer design pattern
 pub trait Observer<T> {
@@ -11,16 +13,22 @@ pub trait Observable<T, O: Observer<T>>  {
     }
 }
 
-
-
-pub struct ObserversManager<T> {
-    observers: Vec<Box<dyn Observer<T>>>,
+impl<T> Observer<T> for Box<dyn Observer<T>> {
+    fn update(&self, data: &T) {
+        (**self).update(data);
+    }
 }
 
-impl <T> ObserversManager<T> {
+pub struct ObserversManager<T, O: Observer<T>> {
+    observers: Vec<O>,
+    phantom: PhantomData<T>
+}
+
+impl <T, O: Observer<T>> ObserversManager<T, O> {
     pub fn new() -> Self {
         Self {
             observers: Vec::new(),
+            phantom: PhantomData
         }
     }
 
@@ -29,7 +37,7 @@ impl <T> ObserversManager<T> {
             observer.update(data)
         }
     }
-    pub fn add_observer(&mut self, observer: Box<dyn Observer<T>>) {
+    pub fn add_observer(&mut self, observer: O) {
         self.observers.push(observer);
     }
 }

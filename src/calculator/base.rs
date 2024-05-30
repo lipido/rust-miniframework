@@ -1,12 +1,14 @@
 use miniframework::observer;
 use miniframework::operation;
-pub struct BasicOperation {
+
+
+pub struct BasicOperation<O: observer::Observer<f32>> {
     name: String,
     parameter_names: Vec<String>,
-    observer_manager: observer::ObserversManager<f32>,
+    observer_manager: observer::ObserversManager<f32, O>,
 }
 
-impl BasicOperation {
+impl<O: observer::Observer<f32>> BasicOperation<O> {
     pub fn new(name: &str, parameter_names: Vec<&str>) -> Self {
         Self {
             name: name.to_string(),
@@ -19,7 +21,7 @@ impl BasicOperation {
     }
 }
 
-impl operation::Operation for BasicOperation {
+impl<O: observer::Observer<f32>> operation::Operation for BasicOperation<O> {
     fn display_name(&self) -> &str {
         &self.name
     }
@@ -34,8 +36,8 @@ impl operation::Operation for BasicOperation {
 
 }
 
-impl observer::Observable<f32, Box<dyn observer::Observer<f32>>> for BasicOperation {
-    fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>>) {
+impl<O: observer::Observer<f32>> observer::Observable<f32, O> for BasicOperation<O> {
+    fn add_observer(&mut self, observer: O) {
         self.observer_manager.add_observer(observer)
     }
 }
