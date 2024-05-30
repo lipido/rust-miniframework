@@ -5,8 +5,9 @@ pub trait Observer<T> {
 }
 
 
-pub trait Observable<T>  {
-    fn add_observer(&mut self, _observer: Box<dyn Observer<T>>) {
+
+pub trait Observable<T, O: Observer<T>>  {
+    fn add_observer(&mut self, _observer: O) {
     }
 }
 

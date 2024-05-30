@@ -51,7 +51,7 @@ impl operation::Operation for Suma {
 
 }
 
-impl observer::Observable<f32> for Suma {
+impl observer::Observable<f32, Box<dyn observer::Observer<f32>>> for Suma {
     fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>>) {
         self.base.add_observer(observer)
     }

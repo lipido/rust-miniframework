@@ -34,7 +34,7 @@ impl operation::Operation for BasicOperation {
 
 }
 
-impl observer::Observable<f32> for BasicOperation {
+impl observer::Observable<f32, Box<dyn observer::Observer<f32>>> for BasicOperation {
     fn add_observer(&mut self, observer: Box<dyn observer::Observer<f32>>) {
         self.observer_manager.add_observer(observer)
     }

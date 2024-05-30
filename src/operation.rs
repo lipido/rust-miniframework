@@ -9,6 +9,11 @@ pub trait Operation {
     fn run(&self, parameter_values: Vec<String>) -> String;
 }
 
-pub trait ObservableOperation: Operation + observer::Observable<f32> {
+impl<T> observer::Observer<T> for Box<dyn observer::Observer<T>> {
+    fn update(&self, data: &T) {
+        (**self).update(data);
+    }
+}
+pub trait ObservableOperation: Operation + observer::Observable<f32, Box<dyn observer::Observer<f32>>> {
 
 }
