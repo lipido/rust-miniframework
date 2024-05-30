@@ -1,9 +1,6 @@
 use std::io;
 
-use crate::{observer, operation::ObservableOperation};
-
-use super::operation;
-
+use crate::framework::{observer, operation::{self, ObservableOperation}};
 
 
 pub struct Application<'a> {

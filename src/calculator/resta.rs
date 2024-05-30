@@ -1,4 +1,5 @@
-use miniframework::{observer, operation};
+
+use miniframework::framework::{observer, operation};
 
 use super::base::BasicOperation;
 

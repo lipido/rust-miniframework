@@ -1,5 +1,5 @@
-use miniframework::observer;
-use miniframework::operation;
+use miniframework::framework::{observer, operation};
+
 
 
 pub struct BasicOperation<O: observer::Observer<f32>> {

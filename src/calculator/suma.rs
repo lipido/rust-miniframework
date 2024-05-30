@@ -1,6 +1,7 @@
 
+use miniframework::framework::{observer, operation::{self, ObservableOperation}};
+
 use super::base;
-use miniframework::{observer, operation::{self, ObservableOperation}};
 
 pub struct Suma {
     base: base::BasicOperation<Box<dyn observer::Observer<f32>>>,

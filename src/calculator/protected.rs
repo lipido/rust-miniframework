@@ -1,7 +1,6 @@
+use miniframework::framework::{observer, operation::{self, ObservableOperation}};
+
 // Proxy design pattern with generic and trait bounds
-use miniframework::operation;
-use miniframework::observer;
-use miniframework::operation::ObservableOperation;
 pub struct ProtectedOperation<O: operation::Operation> {
     base: O,
     name: String
