@@ -2,29 +2,29 @@ use std::marker::PhantomData;
 
 
 // Observer design pattern
-pub trait Observer<T> {
-    fn update(&self, data: &T);
+pub trait Observer<D> {
+    fn update(&self, data: &D);
 }
 
 
 
-pub trait Observable<T, O: Observer<T>>  {
+pub trait Observable<D, O: Observer<D>>  {
     fn add_observer(&mut self, _observer: O) {
     }
 }
 
-impl<T> Observer<T> for Box<dyn Observer<T>> {
-    fn update(&self, data: &T) {
+impl<D> Observer<D> for Box<dyn Observer<D>> {
+    fn update(&self, data: &D) {
         (**self).update(data);
     }
 }
 
-pub struct ObserversManager<T, O: Observer<T>> {
+pub struct ObserversManager<D, O: Observer<D>> {
     observers: Vec<O>,
-    phantom: PhantomData<T>
+    phantom: PhantomData<D>
 }
 
-impl <T, O: Observer<T>> ObserversManager<T, O> {
+impl <D, O: Observer<D>> ObserversManager<D, O> {
     pub fn new() -> Self {
         Self {
             observers: Vec::new(),
@@ -32,7 +32,7 @@ impl <T, O: Observer<T>> ObserversManager<T, O> {
         }
     }
 
-    pub fn notify_observers(&self, data: &T) {
+    pub fn notify_observers(&self, data: &D) {
         for observer in &self.observers {
             observer.update(data)
         }
